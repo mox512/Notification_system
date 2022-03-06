@@ -19,8 +19,7 @@ def createfilename(text):
     symbols = (u"абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
                u"abvgdeejzijklmnoprstufhzcss_y_euaABVGDEEJZIJKLMNOPRSTUFHZCSS_Y_EUA")
     tr = {ord(a): ord(b) for a, b in zip(*symbols)}
-    return text.translate(tr).replace(" ", "_").replace("-", "_").replace(".", "_").replace(",", "_")
-
+    return text.translate(tr).replace(" ", "_").replace("-", "_").replace(".", "_").replace("/", "_")
 
 def url_is_alive(url):
     request = urllib.request.Request(url)
@@ -45,8 +44,8 @@ def synthesize_text(text):
     response = client.synthesize_speech(
         request={"input": input_text, "voice": voice, "audio_config": audio_config}
     )
-    # The response's audio_content is binary.
     fname = "/var/www/web/" + createfilename(text) + ".mp3"
+    #Nginx web server is automatically listing all the files from /var/www/web/ to SELFURL website
     with open(fname, "wb") as out:
         out.write(response.audio_content)
         print('    Media written: ' + fname)
@@ -68,6 +67,7 @@ def emittnotifications(param):
     cast.wait()
     mc = cast.media_controller
     mc.status.volume_level = 10
+    # Play first notification on the list
     fname = SELFURL + createfilename(param[0]['summary']) + '.mp3'
     print('    Emitting media:' + fname)
     mc.play_media(fname, 'audio/mp3')
@@ -84,19 +84,15 @@ def emittnotifications(param):
         print('    Enqueuing media:' + fname)
         mc.play_media(fname, 'audio/mp3', enqueue=True)
     print('   Playback complete')
-    # for URL in MEDIA_URLS[1:]:
-    #    time.sleep(5)
-    #    print("Skipping...")
-    #    cast.media_controller.queue_next()
     pychromecast.discovery.stop_discovery(browser)
-
 
 def main():
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = SERVICE_ACCOUNT_FILE
     from google.oauth2 import service_account
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
     now = datetime.datetime.utcnow().isoformat()
-    infuture = datetime.datetime.utcnow() + timedelta(seconds=(3 * 60))  # Change here for precision cutting
+    infuture = datetime.datetime.utcnow() + timedelta(seconds=(3 * 60))
+    # Change here to manage how far in advance you would like to ge notifications
     print('-----', now, '-----')
     print('   Credentials valid:', credentials.valid)
 
@@ -125,6 +121,7 @@ def main():
 
         for event in events:
             eventstart = datetime.datetime.strptime(event['start'].get('dateTime')[:19], '%Y-%m-%dT%H:%M:%S')
+            # next If designed to Skip notifications for the events that already in progress
             if eventstart < datetime.datetime.now():
                 print('     ' + eventstart.strftime('%Y-%m-%dT%H:%M:%S') + ' !SKIPPED! ' + event['summary'])
                 events.remove(event)
