@@ -9,5 +9,4 @@ Meaning, that in addition to this scrip you will need to run a simple web server
 Setting it up, in combination with script you will be able to play back 
 notification media on specific speaker group in your Google Home.
 
-Will gladly extend this documentation as I see any interest to it. Feel free to comment
-D.
+Will gladly extend this documentation as I see any interest to it. Feel free to reach out with requests.
