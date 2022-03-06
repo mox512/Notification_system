@@ -1,4 +1,4 @@
-# Google calendar notification scrip with audio playback
+# Google calendar notification script with audio playback
 
 Simple application that can be at Cron. That voices over notifications from the Google calendar to your Google Home devices.
 
