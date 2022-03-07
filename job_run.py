@@ -14,7 +14,6 @@ SERVICE_ACCOUNT_FILE = '/home/denis/Documents/Scheduler/token.json'
 SELFURL = 'http://192.168.86.111/'
 ACCOUNTNAME = 'moxusa512@gmail.com'
 
-
 def createfilename(text):
     symbols = (u"абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
                u"abvgdeejzijklmnoprstufhzcss_y_euaABVGDEEJZIJKLMNOPRSTUFHZCSS_Y_EUA")
@@ -51,6 +50,7 @@ def synthesize_text(text):
         print('    Media written: ' + fname)
 
 def emittnotifications(param):
+
     print('   Checking available media')
     for URL in param:
         urlstr = SELFURL + createfilename(URL['summary']) + '.mp3'
@@ -63,12 +63,13 @@ def emittnotifications(param):
 
     print('   Playback init')
     chromecasts, browser = pychromecast.get_listed_chromecasts(friendly_names=['School'])
+    # School is name for speaker group that we use for broadcasting
     cast = chromecasts[0]
     cast.wait()
     mc = cast.media_controller
     mc.status.volume_level = 10
     # Play first notification on the list
-    fname = SELFURL + createfilename(param[0]['summary']) + '.mp3'
+    fname = SELFURL + 'Ding' + '.mp3'
     print('    Emitting media:' + fname)
     mc.play_media(fname, 'audio/mp3')
     # while cast.media_controller.status.player_state != "PLAYING":
@@ -79,7 +80,7 @@ def emittnotifications(param):
         time.sleep(0.1)
 
     # Queue next items
-    for URL in param[1:]:
+    for URL in param:   #param[1:]
         fname = SELFURL + createfilename(URL['summary']) + '.mp3'
         print('    Enqueuing media:' + fname)
         mc.play_media(fname, 'audio/mp3', enqueue=True)
@@ -135,7 +136,6 @@ def main():
         emittnotifications(events)
     except HttpError as error:
         print('An error occurred: %s' % error)
-
 
 if __name__ == '__main__':
     main()
