@@ -13,12 +13,13 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 SERVICE_ACCOUNT_FILE = '/home/denis/Documents/Scheduler/token.json'
 SELFURL = 'http://192.168.86.111/'
 ACCOUNTNAME = 'moxusa512@gmail.com'
+PATHTOWEB = "/var/www/web/"
 
 def createfilename(text):
     symbols = (u"абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
                u"abvgdeejzijklmnoprstufhzcss_y_euaABVGDEEJZIJKLMNOPRSTUFHZCSS_Y_EUA")
     tr = {ord(a): ord(b) for a, b in zip(*symbols)}
-    return text.translate(tr).replace(" ", "_").replace("-", "_").replace(".", "_").replace("/", "_")
+    return text.translate(tr).replace(" ", "_").replace("-", "_").replace(".", "_").replace("/", "_").replace(":", "_")
 
 def url_is_alive(url):
     request = urllib.request.Request(url)
@@ -43,7 +44,7 @@ def synthesize_text(text):
     response = client.synthesize_speech(
         request={"input": input_text, "voice": voice, "audio_config": audio_config}
     )
-    fname = "/var/www/web/" + createfilename(text) + ".mp3"
+    fname = PATHTOWEB + createfilename(text) + ".mp3"
     #Nginx web server is automatically listing all the files from /var/www/web/ to SELFURL website
     with open(fname, "wb") as out:
         out.write(response.audio_content)
@@ -69,7 +70,7 @@ def emittnotifications(param):
     mc = cast.media_controller
     mc.status.volume_level = 10
     # Play first notification on the list
-    fname = SELFURL + 'Ding' + '.mp3'
+    fname = SELFURL + 'Ding.mp3'
     print('    Emitting media:' + fname)
     mc.play_media(fname, 'audio/mp3')
     # while cast.media_controller.status.player_state != "PLAYING":
@@ -119,21 +120,24 @@ def main():
                                               maxResults=10, singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
-
+        notifications = []
         for event in events:
             eventstart = datetime.datetime.strptime(event['start'].get('dateTime')[:19], '%Y-%m-%dT%H:%M:%S')
+            print('       --TD eve: ' +event['summary'])
+            print('       --TD sta: '+eventstart.strftime("%m/%d/%Y, %H:%M:%S"))
+            print('       --TD now: '+datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             # next If designed to Skip notifications for the events that already in progress
             if eventstart < datetime.datetime.now():
                 print('     ' + eventstart.strftime('%Y-%m-%dT%H:%M:%S') + ' !SKIPPED! ' + event['summary'])
-                events.remove(event)
             else:
                 print('     ' + eventstart.strftime('%Y-%m-%dT%H:%M:%S') + ' ' + event['summary'])
+                notifications.add(event)
 
-        if not events:
+        if not notifications:
             print('   No events listed for notification. Exiting. ')
             return
 
-        emittnotifications(events)
+        emittnotifications(notifications)
     except HttpError as error:
         print('An error occurred: %s' % error)
 
