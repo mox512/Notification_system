@@ -93,10 +93,10 @@ def main():
     from google.oauth2 import service_account
     credentials = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
     now = datetime.datetime.utcnow().isoformat()
-    infuture = datetime.datetime.utcnow() + timedelta(seconds=(3 * 60))
+    infuture = datetime.datetime.utcnow() + timedelta(seconds=(2 * 60))
     # Change here to manage how far in advance you would like to ge notifications
     print('-----', now, '-----')
-    print('   Credentials valid:', credentials.valid)
+    #print('   Credentials valid:', credentials.valid)
 
     try:
         service = build('calendar', 'v3', credentials=credentials)
@@ -120,18 +120,18 @@ def main():
                                               maxResults=10, singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
+        #print ("!!"+events)
         notifications = []
         for event in events:
             eventstart = datetime.datetime.strptime(event['start'].get('dateTime')[:19], '%Y-%m-%dT%H:%M:%S')
-            print('       --TD eve: ' +event['summary'])
-            print('       --TD sta: '+eventstart.strftime("%m/%d/%Y, %H:%M:%S"))
-            print('       --TD now: '+datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
-            # next If designed to Skip notifications for the events that already in progress
+            #print('       --TD eve: ' +event['summary'])
+            #print('       --TD sta: '+eventstart.strftime("%m/%d/%Y, %H:%M:%S"))
+            #print('       --TD now: '+datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
             if eventstart < datetime.datetime.now():
                 print('     ' + eventstart.strftime('%Y-%m-%dT%H:%M:%S') + ' !SKIPPED! ' + event['summary'])
             else:
                 print('     ' + eventstart.strftime('%Y-%m-%dT%H:%M:%S') + ' ' + event['summary'])
-                notifications.add(event)
+                notifications.append(event)
 
         if not notifications:
             print('   No events listed for notification. Exiting. ')

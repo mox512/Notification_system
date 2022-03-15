@@ -1,6 +1,8 @@
 *.json
 *.log
 *.key
+*.html
+*.cfg
 bin/
 lib/
 __pycache__/
