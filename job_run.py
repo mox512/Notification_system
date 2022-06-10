@@ -10,10 +10,10 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-SERVICE_ACCOUNT_FILE = '/home/denis/Documents/Scheduler/token.json'
-SELFURL = 'http://192.168.86.111/'
+SERVICE_ACCOUNT_FILE = '/mnt/stor/script/token.json'
+SELFURL = 'http://192.168.86.120/'
 ACCOUNTNAME = 'moxusa512@gmail.com'
-PATHTOWEB = "/var/www/web/"
+PATHTOWEB = "/mnt/stor/www/"
 
 def createfilename(text):
     symbols = (u"абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ",
@@ -77,8 +77,8 @@ def emittnotifications(param):
     #    time.sleep(0.1)
     #    print(mc.status)
 
-    while mc.status.player_state != "PLAYING":
-        time.sleep(0.1)
+    #--while mc.status.player_state != "PLAYING":
+    #--   time.sleep(0.1)
 
     # Queue next items
     for URL in param:   #param[1:]
@@ -124,10 +124,8 @@ def main():
         notifications = []
         for event in events:
             eventstart = datetime.datetime.strptime(event['start'].get('dateTime')[:19], '%Y-%m-%dT%H:%M:%S')
-            #print('       --TD eve: ' +event['summary'])
-            #print('       --TD sta: '+eventstart.strftime("%m/%d/%Y, %H:%M:%S"))
-            #print('       --TD now: '+datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
-            if eventstart < datetime.datetime.now():
+            print ('2ndBool:'+str(event['summary'][0] != '_'));
+            if (eventstart < datetime.datetime.now())and(event['summary'][0] != '_'):
                 print('     ' + eventstart.strftime('%Y-%m-%dT%H:%M:%S') + ' !SKIPPED! ' + event['summary'])
             else:
                 print('     ' + eventstart.strftime('%Y-%m-%dT%H:%M:%S') + ' ' + event['summary'])
