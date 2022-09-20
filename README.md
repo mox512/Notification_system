@@ -1,7 +1,7 @@
 # Google calendar notification script with audio playback
 
 Motivation / problem statement: The time I was in school there was a class ring notifying everyone that break is over and it's time to get back to the desks.
-Nowadays my kids study remotely. Even though there is a kids friendly calendar that shows when the next class starts, it was not quite useful so far. Notifications is not reliable
+Nowadays my kids study remotely. Even though there is a kids friendly calendar that shows when the next class starts, it was not quite useful so far. Notifications is not reliable.
 I wanted to leverage the power of the smart devices we have across our homes, and give meaningful scheduled voiced loud notifications to everyone at home.
 
 Here is diagram describing key components,
