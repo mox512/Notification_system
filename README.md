@@ -4,6 +4,7 @@ Motivation: The time I was in school there were a class ring notifiing everyone 
 Now days my kids study remotely. Eventhough there there is kids friendly calendar that shows when next class starts, it was not quite reliable so far.
 I wanted to leverage power of the smart devices we have across our homes, and give meningfull scheduled voiced loud notifications to everyone.
 
+![alt text](https://github.com/mox512/Notification_system/blob/Diagram.png?raw=true)
 
 
 Simple application that can be at Cron. That voices over notifications from the Google calendar to your Google Home devices.
