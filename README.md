@@ -4,29 +4,7 @@ Motivation / problem statement: The time I was in school there was a class ring 
 Nowadays my kids study remotely. Even though there is a kids friendly calendar that shows when the next class starts, it was not quite useful so far. Notifications is not reliable.
 I wanted to leverage the power of the smart devices we have across our homes, and give meaningful scheduled voiced loud notifications to everyone at home.
 
- +---------------+   +-----------------------+   +---------------------+
-  | Scheduler -   |   | Google Cloud Calendar |   | Calculate           |
-  | Chron Job     |-->| API                   |-->| Notifications       |
-  | (Every 5 mins)|   +-----------------------+   +---------------------+
-  +---------------+                                    |
-                                                       v
-                                          +------------------------+
-                                          | Google Cloud Text2Speech|
-                                          | API                    |
-                                          +------------------------+
-                                                      |
-                                                      v
-                                         +---------------------------+
-                                         | Upload Notifications to   |
-                                         | Local Nginx Server        |
-                                         +---------------------------+
-                                                      |
-                                                      v
-                                         +----------------------------+
-                                         | Trigger Audio Playback on  |
-                                         | Google Home Speakers       |
-                                         | via Chromecast             |
-                                         +----------------------------+
+
 
 Here is diagram describing key components,
 ![alt text](https://github.com/mox512/Notification_system/blob/master/Diagram.png?raw=true)
