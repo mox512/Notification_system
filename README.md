@@ -1,4 +1,4 @@
-# Google calendar notification script with audio playback
+# "Kids it's time to to get to class" automation using Google calendar, GCP and Google Home devices.
 
 Motivation / problem statement: The time I was in school there was a class ring notifying everyone that break is over and it's time to get back to the desks.
 Nowadays my kids study remotely. Even though there is a kids friendly calendar that shows when the next class starts, it was not quite useful so far. Notifications is not reliable.
